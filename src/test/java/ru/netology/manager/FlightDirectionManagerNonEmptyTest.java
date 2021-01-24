@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.netology.comparator.FlightDirectionByPriceAscComparator;
 import ru.netology.domain.FlightDirection;
 import ru.netology.repository.FlightDirectionRepository;
 
@@ -79,6 +80,48 @@ class FlightDirectionManagerNonEmptyTest {
         manager = new FlightDirectionManager(repository);
 
         FlightDirection[] actual = manager.findAll("SVO", "ICN_1");
+        FlightDirection[] expected = new FlightDirection[0];
+
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void findAllComporatorSeveralElementResultTest() {
+        FlightDirectionByPriceAscComparator comparator = new FlightDirectionByPriceAscComparator();
+        FlightDirection[] returned = new FlightDirection[] {first, second, third, fourth, fifth};
+        doReturn(returned).when(repository).findAll();
+
+        manager = new FlightDirectionManager(repository);
+
+        FlightDirection[] actual = manager.findAll("LED", "OVB", comparator);
+        FlightDirection[] expected = new FlightDirection[] {third, fourth, first};
+
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void findAllComporatorOneElementResultTest() {
+        FlightDirectionByPriceAscComparator comparator = new FlightDirectionByPriceAscComparator();
+        FlightDirection[] returned = new FlightDirection[] {first, second, third, fourth, fifth};
+        doReturn(returned).when(repository).findAll();
+
+        manager = new FlightDirectionManager(repository);
+
+        FlightDirection[] actual = manager.findAll("SVO", "ICN", comparator);
+        FlightDirection[] expected = new FlightDirection[] {second};
+
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void findAllComporatorEmptyResultTest() {
+        FlightDirectionByPriceAscComparator comparator = new FlightDirectionByPriceAscComparator();
+        FlightDirection[] returned = new FlightDirection[] {first, second, third, fourth, fifth};
+        doReturn(returned).when(repository).findAll();
+
+        manager = new FlightDirectionManager(repository);
+
+        FlightDirection[] actual = manager.findAll("SVO", "ICN_1", comparator);
         FlightDirection[] expected = new FlightDirection[0];
 
         assertArrayEquals(expected, actual);

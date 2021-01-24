@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.netology.comparator.FlightDirectionByPriceAscComparator;
 import ru.netology.domain.FlightDirection;
 import ru.netology.repository.FlightDirectionRepository;
 
@@ -54,6 +55,26 @@ class FlightDirectionManagerEmptyTest {
         manager = new FlightDirectionManager(repository);
 
         assertThrows(NullPointerException.class, () -> manager.findAll("SVO", "ICN"));
+    }
+
+    @Test
+    public void findAllComporatorEmptyRepoTest() {
+        FlightDirectionByPriceAscComparator comparator = new FlightDirectionByPriceAscComparator();
+        repository = new FlightDirectionRepository();
+        manager = new FlightDirectionManager(repository);
+
+        FlightDirection[] actual = manager.findAll("SVO", "ICN", comparator);
+        FlightDirection[] expected = new FlightDirection[0];
+
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void findAllComporatorNULLRepoTest() {
+        FlightDirectionByPriceAscComparator comparator = new FlightDirectionByPriceAscComparator();
+        manager = new FlightDirectionManager(repository);
+
+        assertThrows(NullPointerException.class, () -> manager.findAll("SVO", "ICN", comparator));
     }
 
     @Test
