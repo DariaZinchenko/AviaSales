@@ -5,6 +5,7 @@ import ru.netology.domain.FlightDirection;
 import ru.netology.repository.FlightDirectionRepository;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 @AllArgsConstructor
 public class FlightDirectionManager {
@@ -38,6 +39,27 @@ public class FlightDirectionManager {
         }
 
         Arrays.sort(result);
+        return result;
+    }
+
+    public FlightDirection[] findAll(String fromIATA, String toIATA, Comparator<FlightDirection> comparator){
+        FlightDirection[] result = new FlightDirection[0];
+        FlightDirection[] flights = repository.findAll();
+
+        for (FlightDirection flight : flights) {
+            if (flight.matchesFrom(fromIATA) && flight.matchesTo(toIATA)) {
+                int length = result.length + 1;
+                FlightDirection[] tmp = new FlightDirection[length];
+
+                System.arraycopy(result, 0, tmp, 0, result.length);
+
+                tmp[length - 1] = flight;
+
+                result = tmp;
+            }
+        }
+
+        Arrays.sort(result, comparator);
         return result;
     }
 }
